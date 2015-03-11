@@ -1,11 +1,14 @@
-// #count is the guess number (qty) - span
-// #userGuess is the value of the current guess number - input text
-// #guessButton is the button for doing the guess - input submit
-// #guessList is the unordered list for output - ul
-// .new is the "new game" link - a
-// #feedback is the initial "Make Your Guess!" but becomes feedback - div
+/*
+#count is the guess number (qty) - span
+#userGuess is the value of the current guess number - input text
+#guessButton is the button for doing the guess - input submit
+#guessList is the unordered list for output - ul
+.new is the "new game" link - a
+#feedback is the initial "Make Your Guess!" but becomes feedback - div
+*/
 
 var secretNumber = 0;
+var prevDiff = 0;
 
 
 $(document).ready(function(){
@@ -26,14 +29,12 @@ $(document).ready(function(){
   	});
 
 	$("#userGuess").keydown(function(event) {
-
 		if ( event.which == 13 )
 		{
 			handleGuessButtonClick(event);
 			event.preventDefault();
 			return false;
 		}
-
 	});
 
 
@@ -54,16 +55,17 @@ function newGame()
 	$("#feedback").html("Make Your Guess!");
 
 	setSecretNumber();
+	prevDiff = 0;
 }
 
 
 function setSecretNumber()
 {
-    secretNumber = Math.floor(Math.random() * 100);   // returns 0 -99
+    secretNumber = Math.floor(Math.random() * 100);   // returns 0-99
     secretNumber += 1;
 
     // Temporary to make sure secret number is ok:
-	$("#guessList").append("<li>Secret number: " + secretNumber + "</li>");
+	// $("#guessList").append("<li>Secret number: " + secretNumber + "</li>");
 
 }
 
@@ -83,7 +85,7 @@ function handleGuessButtonClick(pEvent)
 	var feedback = getFeedback(parseInt(input));
 	$("#feedback").html(feedback);
 
-	$("#guessList").append("<li>" + input + " - " + feedback + "</li>");
+	$("#guessList").prepend("<li>" + input + " - " + feedback + "</li>");
 
 	$("#userGuess").val("");
 }
@@ -135,25 +137,35 @@ function getFeedback(pGuess)
 		return "Bingo!  You got it!";
 	}
 
+	var hint = "";
+
+	if (prevDiff != 0 && prevDiff != diff)
+	{
+		hint = diff < prevDiff ? " (warmer)" : " (colder)";
+	}
+
+	prevDiff = diff;
+
+
 	if (diff < 10)
 	{
-		return "Very hot";
+		return "Very hot" + hint;
 	}
 
 	if (diff < 20)
 	{
-		return "Hot";
+		return "Hot" + hint;
 	}
 
 	if (diff < 30)
 	{
-		return "Warm";
+		return "Warm" + hint;
 	}
 
 	if (diff < 50)
 	{
-		return "Cold";
+		return "Cold" + hint;
 	}
 
-	return "Ice cold ... burrr!";
+	return "Ice cold ... burrr!" + hint;
 }

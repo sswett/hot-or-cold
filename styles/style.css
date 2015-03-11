@@ -309,7 +309,7 @@ ul.guessBox {
 	overflow: auto;
 }
 ul.guessBox li {
-	display: inline;
+	display: inline-block;
 	background-color: #1a4e95;
 	padding: 0.3em;
 	-webkit-border-radius: 4px;
